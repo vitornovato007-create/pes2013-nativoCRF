@@ -13,15 +13,15 @@ import sys
 from pathlib import Path
 from typing import Any
 
-AFS_MAGIC = b"AFS\\x00"
+AFS_MAGIC = b"AFS\x00"
 SFD_MARKERS = (b"SofdecStream2", b"@CRITAGS", b"SFVFTRS", b"SFV:DCD", b"SFV:ECD")
 MARKERS = (
     (b"WESYS", "WESYS marker"),
     (b"CPK ", "CRI CPK"),
     (b"RIFF", "RIFF container"),
     (b"OggS", "Ogg stream"),
-    (b"\\x89PNG\\r\\n\\x1a\\n", "PNG"),
-    (b"\\xff\\xd8\\xff", "JPEG"),
+    (b"\x89PNG\\r\\n\x1a\\n", "PNG"),
+    (b"\xff\xd8\xff", "JPEG"),
 )
 
 
@@ -128,7 +128,7 @@ def inspect_sfd(path: Path) -> dict[str, Any]:
     size = path.stat().st_size
     with path.open("rb") as handle:
         header = read_at(handle, 0, min(64, size))
-    mpeg_ps = header.startswith(b"\\x00\\x00\\x01\\xba")
+    mpeg_ps = header.startswith(b"\x00\x00\x01\xba")
     markers = scan_markers(path, SFD_MARKERS, 8 * 1024 * 1024)
     return {
         "file": path.name,
