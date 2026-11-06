@@ -1,0 +1,61 @@
+name: PES asset format audit
+
+on:
+  workflow_dispatch:
+    inputs:
+      run_self_tests:
+        description: "Run parser self-tests"
+        required: true
+        type: boolean
+        default: true
+      scan_repository_assets:
+        description: "Scan .img/.sfd files already present under game-data/"
+        required: true
+        type: boolean
+        default: false
+  pull_request:
+    paths:
+      - "tools/**"
+      - ".github/workflows/pes-asset-audit.yml"
+
+permissions:
+  contents: read
+
+concurrency:
+  group: pes-asset-audit-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  audit-tools:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out source
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Run parser self-tests
+        if: ${{ github.event_name == 'pull_request' || inputs.run_self_tests }}
+        run: python -m unittest discover -s tools -p "test_*.py" -v
+
+      - name: Scan assets already present in repository
+        if: ${{ github.event_name == 'workflow_dispatch' && inputs.scan_repository_assets }}
+        run: |
+          if [ ! -d game-data ]; then
+            echo "::notice::No game-data directory found. No game assets were scanned."
+            exit 0
+          fi
+          python tools/pes_asset_inspector.py game-data --json audit-report.json
+          cat audit-report.json
+
+      - name: Upload audit report
+        if: ${{ always() && hashFiles('audit-report.json') != '' }}
+        uses: actions/upload-artifact@v4
+        with:
+          name: pes-asset-audit-report
+          path: audit-report.json
+          if-no-files-found: ignore
+          retention-days: 7
