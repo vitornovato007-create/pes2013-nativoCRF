@@ -20,7 +20,7 @@ MARKERS = (
     (b"CPK ", "CRI CPK"),
     (b"RIFF", "RIFF container"),
     (b"OggS", "Ogg stream"),
-    (b"\x89PNG\\r\\n\x1a\\n", "PNG"),
+    (bytes.fromhex("89504e470d0a1a0a"), "PNG"),
     (b"\xff\xd8\xff", "JPEG"),
 )
 
@@ -197,7 +197,7 @@ def main(argv: list[str] | None = None) -> int:
         print(output)
         if args.json_path:
             args.json_path.parent.mkdir(parents=True, exist_ok=True)
-            args.json_path.write_text(output + "\\n", encoding="utf-8")
+            args.json_path.write_text(output + chr(10), encoding="utf-8")
         return 1 if any("error" in item for item in results) else 0
     except (OSError, AuditError) as exc:
         print(f"ERROR: {exc}", file=sys.stderr)
