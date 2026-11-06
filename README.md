@@ -52,7 +52,7 @@ Veja [docs/ROADMAP.md](docs/ROADMAP.md), [docs/ARCHITECTURE.md](docs/ARCHITECTUR
 
 ## Build
 
-A estrutura inicial ainda não produz um APK jogável. Os arquivos de build serão ampliados depois da auditoria e da escolha das dependências. Nenhum workflow de CI foi criado ou executado nesta etapa.
+A estrutura inicial ainda não produz um APK jogável. Os arquivos de build serão ampliados depois da auditoria e da escolha das dependências. O workflow manual de auditoria de assets está em `.github/workflows/pes-asset-audit.yml`; ele não foi executado.
 
 ## Dados do jogo e direitos autorais
 
