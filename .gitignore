@@ -1,0 +1,34 @@
+# Android / Gradle
+.gradle/
+**/build/
+local.properties
+*.iml
+.idea/
+.cxx/
+.externalNativeBuild/
+
+# Native build outputs
+out/
+cmake-build-*/
+CMakeFiles/
+CMakeCache.txt
+compile_commands.json
+*.o
+*.a
+*.so
+*.dll
+*.exe
+*.apk
+*.aab
+
+# IDE / OS
+.DS_Store
+Thumbs.db
+
+# User-provided game data and dumps
+/game-data/
+/user-game-files/
+/captures/
+/logs/
+*.dmp
+*.core
